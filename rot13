@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+input = ARGF.read
+
+# a HOF to map a given block over each letter in a string
+def charMap (str, &blk) str.split('').map(&blk).join('') end
+
+def thirteen (string)
+  charMap (string) { |char|
+    # non-alphanumerics get a pass. in ruby, 
+    # `return` from this block would return 
+    # from the whole function. in languages 
+    # with sane `return` behavior, this would 
+    # read `return char if...`
+    next char if not char =~ /[[:alpha:]]/
+    code = char.ord # grab the ascii value
+
+    # rotate across the 26 letter alphabet,
+    # and convert back to a char before returning
+    if (char =~ /[A-Z]/)
+      code > 77 ? (code - 13).chr : (code + 13).chr 
+    elsif (char =~ /[a-z]/)
+      code > 109 ? (code - 13).chr : (code + 13).chr 
+    end
+  }
+end
+
+print thirteen(input)
+
